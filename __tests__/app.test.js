@@ -42,3 +42,14 @@ describe.skip('GET /api/topics', () => {
     })
   })
 });
+
+describe('404: not a route', () => {
+  test("404: returns with an error message when invalid url requested",()=>{
+    return request(app)
+    .get("/app")
+    .expect(404)
+    .then(({body: {error}})=>{
+      expect(error).toEqual("Invalid URL!")
+    })
+  })
+});

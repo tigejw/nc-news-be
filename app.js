@@ -7,7 +7,7 @@ const {getEndpoints} = require("./controller")
 app.get("/api", getEndpoints)
 
 app.all("/*", (req, res)=>{
-    res.status(404).send({msg: "URL not found!"})
+    res.status(404).send({error: "Invalid URL!"})
 })
 
 module.exports = app
