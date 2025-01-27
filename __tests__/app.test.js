@@ -88,6 +88,27 @@ describe('GET /api/articles', () => {
   });
 });
 
+describe.only('GET /api/articles/:article_id/comments', () => {
+  test('200: should respond with an array of comment objects for relevant article_id with expected properties + datatypes in date ordered desc ', () => {
+    return request(app)
+    .get("/api/articles/1/comments")
+    .expect(200)
+    .then(({body: {comments}})=>{
+      expect(comments.length).toBe(11)
+      expect(comments).toBeSortedBy("created_at", {descending : true})
+      comments.forEach((comment)=>{
+        expect(comment).toEqual(expect.objectContaining({
+          comment_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          article_id: expect.any(Number)
+        }))
+      })
+    })
+  });
+});
 //error testing
 describe('error handling', () => {
   describe('404: not a route', () => {
