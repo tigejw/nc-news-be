@@ -43,13 +43,56 @@ describe('GET /api/topics', () => {
   })
 });
 
-describe('404: not a route', () => {
-  test("404: returns with an error message when invalid url requested",()=>{
+describe('GET /api/articles/:article_id', () => {
+  test("200: responds with corresponding article object according to requested id, should return one object with relevant properties + data", ()=>{
     return request(app)
-    .get("/app")
-    .expect(404)
-    .then(({body: {error}})=>{
-      expect(error).toEqual("Invalid URL!")
+    .get("/api/articles/1")
+    .expect(200)
+    .then(({body : {article}})=>{
+      expect(article).toEqual({
+        author: "butter_bridge",
+        title: "Living in the shadow of a great man",
+        article_id: 1,
+        topic: "mitch",
+        body: "I find this existence challenging",
+        created_at: "2020-07-09T20:11:00.000Z",
+        votes: 100,
+        article_img_url:
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+      })
     })
   })
+});
+
+
+//error testing
+describe('error handling', () => {
+  describe('404: not a route', () => {
+    test("404: returns with an error message when invalid url requested",()=>{
+      return request(app)
+      .get("/app")
+      .expect(404)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Invalid URL!")
+      })
+    })
+  });
+  describe('GET /api/articles/:article_id', () => {
+    test('400: returns with a bad request error message when invalid article id inputted', () => {
+      return request(app)
+      .get("/api/articles/FIFTEEN")
+      .expect(400)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Bad request!")
+      })
+    });
+    test('404: returns with not found message when valid id inputted that has no corresponding article', () => {
+      return request(app)
+      .get("/api/articles/3141592")
+      .expect(404)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Not found!")
+      })
+    });
+  });
 });
