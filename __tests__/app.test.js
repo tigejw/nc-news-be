@@ -26,7 +26,7 @@ describe("GET /api", () => {
 });
 
 
-describe.skip('GET /api/topics', () => {
+describe('GET /api/topics', () => {
   test("200: Responds with an array of topic objects, each of which should have a slug and a description property", ()=>{
     return request(app)
     .get("/api/topics")
