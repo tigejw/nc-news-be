@@ -1,0 +1,18 @@
+You are now connected to database "nc_news_test" as user "tjw".
+                         title                          |    author     | article_id | topic |     created_at      | votes |                                            article_img_url                                            | comment_count 
+--------------------------------------------------------+---------------+------------+-------+---------------------+-------+-------------------------------------------------------------------------------------------------------+---------------
+ Eight pug gifs that remind me of mitch                 | icellusedkars |          3 | mitch | 2020-11-03 09:12:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |             2
+ A                                                      | icellusedkars |          6 | mitch | 2020-10-18 02:00:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |             1
+ Sony Vaio; or, The Laptop                              | icellusedkars |          2 | mitch | 2020-10-16 06:03:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |             0
+ Moustache                                              | butter_bridge |         12 | mitch | 2020-10-11 12:24:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |             0
+ Another article about Mitch                            | butter_bridge |         13 | mitch | 2020-10-11 12:24:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |             0
+ UNCOVERED: catspiracy to bring down democracy          | rogersop      |          5 | cats  | 2020-08-03 14:14:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |             2
+ Living in the shadow of a great man                    | butter_bridge |          1 | mitch | 2020-07-09 21:11:00 |   100 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |            11
+ They're not exactly dogs, are they?                    | butter_bridge |          9 | mitch | 2020-06-06 10:10:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |             2
+ Seven inspirational thought leaders from Manchester UK | rogersop      |         10 | mitch | 2020-05-14 05:15:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |             0
+ Student SUES Mitch!                                    | rogersop      |          4 | mitch | 2020-05-06 02:14:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |             0
+ Does Mitch predate civilisation?                       | icellusedkars |          8 | mitch | 2020-04-17 02:08:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |             0
+ Am I a cat?                                            | icellusedkars |         11 | mitch | 2020-01-15 22:21:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |             0
+ Z                                                      | icellusedkars |          7 | mitch | 2020-01-07 14:08:00 |     0 | https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700 |             0
+(13 rows)
+
