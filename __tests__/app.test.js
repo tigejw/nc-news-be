@@ -24,3 +24,21 @@ describe("GET /api", () => {
       });
   });
 });
+
+
+describe.skip('GET /api/topics', () => {
+  test("200: Responds with an array of topic objects, each of which should have a slug and a description property", ()=>{
+    return request(app)
+    .get("/api/topics")
+    .expect(200)
+    .then(({body: {topics}})=>{
+      expect(topics.length).toBe(3)
+      topics.forEach((topic)=>{
+        expect(topic).toEqual(expect.objectContaining({
+          slug : expect.any(String),
+          description : expect.any(String)
+        }))
+      })
+    })
+  })
+});
