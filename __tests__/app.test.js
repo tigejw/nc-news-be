@@ -194,9 +194,9 @@ describe('POST /api/articles/:article_id/comments', () => {
       return request(app)
       .post("/api/articles/3141592/comments")
       .send({username: "icellusedkars", body: "literal chills"})
-      .expect(400)
+      .expect(404)
       .then(({body: {error}})=>{
-        expect(error).toEqual("Bad request!")
+        expect(error).toEqual("Not found!")
       })
     });
     test('400: post body does not contain the correct properies ', () => {
@@ -215,6 +215,62 @@ describe('POST /api/articles/:article_id/comments', () => {
       .expect(400)
       .then(({body: {error}})=>{
         expect(error).toEqual("Bad request!")
+      })
+    });
+  });
+});
+
+describe('PATCH /api/articles/:article_id', () => {
+  test('200: should adjust votes of relevant article and return updated article object', () => {
+    return request(app)
+    .patch("/api/articles/1")
+    .send({inc_votes: 12})
+    .then(({body: {article}})=>{
+      expect(article.votes).toBe(112)
+    })
+  });
+  test('200: should also decrement articles votes if negative votes inputted and work with articles with 0 existing votes', () => {
+    return request(app)
+    .patch("/api/articles/2")
+    .send({inc_votes: -1})
+    .then(({body: {article}})=>{
+      expect(article.votes).toBe(-1)
+    })
+  });
+  describe('error handling', () => {
+    test('400: patch body does not contain the correct fields', () => {
+      return request(app)
+      .patch("/api/articles/2")
+      .send({})
+      .expect(400)
+      .then(({body: {error}})=>{
+        expect(error).toBe("Bad request!")
+      })
+    });
+    test('400: patch with valid fields but wrong datatype', () => {
+      return request(app)
+      .patch("/api/articles/2")
+      .send({inc_votes: "word"})
+      .expect(400)
+      .then(({body: {error}})=>{
+        expect(error).toBe("Bad request!")
+      })
+    });
+    test('400: article_id is invalid', () => {
+      return request(app)
+      .patch("/api/articles/FIFTEEN")
+      .send({inc_votes: -1})
+      .expect(400)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Bad request!")
+      })
+    });
+    test('404: article_id is valid but article doesnt exist', () => {
+      return request(app)
+      .patch("/api/articles/314")
+      .send({inc_votes: -1})
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Not found!")
       })
     });
   });

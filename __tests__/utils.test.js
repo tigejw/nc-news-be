@@ -2,7 +2,8 @@ const {
   convertTimestampToDate,
   createRef,
   formatComments,
-  checkArticleExists
+  checkArticleExists,
+  checkUserExists
 } = require("../db/seeds/utils");
 
 describe("convertTimestampToDate", () => {
@@ -110,5 +111,14 @@ describe('checkArticleExists', () => {
   });
   test('should resolve if article exists', () => {
     return expect(checkArticleExists(2)).resolves.toMatch("Article exists!")
+  });
+});
+
+describe('checkUserExists', () => {
+  test('should return rejected promise with 404 status + msg when searching for an user that doesnt exist', () => {
+    return expect(checkUserExists("tjw")).rejects.toMatchObject({status: 400, msg: "Bad request!"})
+  });
+  test('should resolve if user exists', () => {
+    return expect(checkUserExists("icellusedkars")).resolves.toMatch("User exists!")
   });
 });

@@ -83,7 +83,7 @@
     }
   },
   "POST /api/articles/:article_id/comments": {
-    "description": "posts a comment into the comments database and returns the posted comment",
+    "description": "posts a comment into the comments database and serves the posted comment",
     "request body format": {
       "username": "existing username",
       "body": "thats what i think!"
@@ -93,6 +93,24 @@
       "comment": {
         "username": "existing username",
         "body": "thats what i think!"
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id" : {
+    "description": "updates an articles votes property incremenetally and serves updated article object",
+    "request body format": {
+      "inc_votes": 3
+    },
+    "queries": [],
+    "example response": {
+      "article" :{
+        "title": "Seafood substitutions are increasing",
+        "topic": "cooking",
+        "author": "weegembump",
+        "body": "Text from the article..",
+        "created_at": "2018-05-30T15:59:13.341Z",
+        "votes": 3,
+        "comment_count": 6
       }
     }
   }
