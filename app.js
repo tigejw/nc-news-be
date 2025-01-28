@@ -2,20 +2,23 @@ const express = require("express")
 const app = express()
 app.use(express.json())
 
-const {getEndpoints, getTopics, getArticleByArticleId, getArticles, getCommentsByArticleId} = require("./controller")
+const {getEndpoints, getTopics, getArticleByArticleId, getArticles, getCommentsByArticleId, postCommentByArticleId} = require("./controller")
 
 app.get("/api", getEndpoints)
 app.get("/api/topics", getTopics)
 app.get("/api/articles/:article_id", getArticleByArticleId)
 app.get("/api/articles", getArticles)
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
+app.post("/api/articles/:article_id/comments", postCommentByArticleId)
 
 app.all("/*", (req, res)=>{
     res.status(404).send({error: "Invalid URL!"})
 })
 
+//error handling middleware
+
 app.use((err, req, res, next)=>{
-    if(err.code==="22P02"){
+    if(err.code==="22P02" || err.code==="23502" || err.code==="23503"){
         res.status(400).send({error: "Bad request!"})
     }else next(err)
 })

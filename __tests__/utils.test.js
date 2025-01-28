@@ -104,7 +104,7 @@ describe("formatComments", () => {
   });
 });
 
-describe.only('checkArticleExists', () => {
+describe('checkArticleExists', () => {
   test('should return rejected promise with 404 status + msg when searching for an article that doesnt exist', () => {
     return expect(checkArticleExists(3141592)).rejects.toMatchObject({status: 404, msg: "Not found!"})
   });
