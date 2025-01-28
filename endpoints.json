@@ -2,24 +2,44 @@
   "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api",
     "queries": [],
-    "exampleResponse" : {
-      "endpoints" : { "Get /api" : {"description" : "gets endpoints!", "queries" : ["non_here"], "exampleResponse" : { "endpoints" : {}}}}
+    "exampleResponse": {
+      "endpoints": {
+        "Get /api": {
+          "description": "gets endpoints!",
+          "queries": [
+            "non_here"
+          ],
+          "exampleResponse": {
+            "endpoints": {}
+          }
+        }
+      }
     }
   },
   "GET /api/topics": {
     "description": "serves an array of all topics",
     "queries": [],
     "exampleResponse": {
-      "topics": [{ "slug": "football", "description": "Footie!" }]
+      "topics": [
+        {
+          "slug": "football",
+          "description": "Footie!"
+        }
+      ]
     }
   },
   "GET /api/articles": {
     "description": "serves an array of all articles",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": [
+      "author",
+      "topic",
+      "sort_by",
+      "order"
+    ],
     "exampleResponse": {
       "articles": [
         {
-          "article_id" : 1,
+          "article_id": 1,
           "title": "Seafood substitutions are increasing",
           "topic": "cooking",
           "author": "weegembump",
@@ -31,34 +51,49 @@
       ]
     }
   },
-  "GET /api/articles/:article_id" : {
-    "description" : "serves an article object by article_id",
+  "GET /api/articles/:article_id": {
+    "description": "serves an article object by article_id",
     "queries": [],
-    "exampleResponse" : {
-      "article" : {
+    "exampleResponse": {
+      "article": {
         "title": "Seafood substitutions are increasing",
-          "topic": "cooking",
-          "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": "2018-05-30T15:59:13.341Z",
-          "votes": 0,
-          "comment_count": 6
+        "topic": "cooking",
+        "author": "weegembump",
+        "body": "Text from the article..",
+        "created_at": "2018-05-30T15:59:13.341Z",
+        "votes": 0,
+        "comment_count": 6
       }
     }
   },
-  "GET /api/articles/:article_id/comments" : {
-    "description" : "serves all an array of all comments made with corresponding article id",
-    "queries" : [],
-    "exampleResponse" : {
-      "comments" : 
-        [ {
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves all an array of all comments made with corresponding article id",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
           "comment_id": 9,
           "body": "Superficially charming",
           "article_id": 1,
           "author": "icellusedkars",
           "votes": 0,
           "created_at": "2020-01-01T03:08:00.000Z"
-        } ]
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts a comment into the comments database and returns the posted comment",
+    "request body format": {
+      "username": "existing username",
+      "body": "thats what i think!"
+    },
+    "queries": [],
+    "example response": {
+      "comment": {
+        "username": "existing username",
+        "body": "thats what i think!"
+      }
     }
   }
 }

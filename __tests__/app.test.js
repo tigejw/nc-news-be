@@ -4,7 +4,7 @@ const seed = require("../db/seeds/seed.js")
 const db = require("../db/connection.js")
 
 const endpointsJson = require("../endpoints.json");
-const {articleData, commentData, topicData, userData} = require("../db/data/test-data/index.js")
+const {articleData, commentData, topicData, userData} = require("../db/data/test-data/index.js");
 
 beforeEach(()=>{
   return seed({topicData, userData, articleData, commentData});
@@ -154,16 +154,79 @@ describe('GET /api/articles/:article_id/comments', () => {
   });
 });
 
-//error testing
-describe('general error handling', () => {
-  describe('404: not a route', () => {
-    test("404: returns with an error message when invalid url requested",()=>{
-      return request(app)
-      .get("/app")
-      .expect(404)
-      .then(({body: {error}})=>{
-        expect(error).toEqual("Invalid URL!")
-      })
+describe('POST /api/articles/:article_id/comments', () => {
+  test('should respond with 201 status code and posted data', () => {
+    return request(app)
+    .post("/api/articles/2/comments")
+    .send({username: "icellusedkars", body: "literal chills"})
+    .expect(201)
+    .then(({body: {comment}})=>{
+      expect(comment).toEqual(expect.objectContaining({
+          comment_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          article_id: 2
+      }))
     })
   });
+  describe('error handling', () => {
+    test('400: inputted username doesnt already exist', () => {
+      return request(app)
+      .post("/api/articles/1/comments")
+      .send({username: "tjw", body: "c:"})
+      .expect(400)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Bad request!")
+      })
+    });
+    test('400: articlie id is invalid', () => {
+      return request(app)
+      .post("/api/articles/FIFTEEN/comments")
+      .send({username: "icellusedkars", body: "literal chills"})
+      .expect(400)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Bad request!")
+      })
+    });
+    test('400: article_id valid but article does not exist', () => {
+      return request(app)
+      .post("/api/articles/3141592/comments")
+      .send({username: "icellusedkars", body: "literal chills"})
+      .expect(400)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Bad request!")
+      })
+    });
+    test('400: post body does not contain the correct properies ', () => {
+      return request(app)
+      .post("/api/articles/2/comments")
+      .send({body: "literal chills"})
+      .expect(400)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Bad request!")
+      })
+    });
+    test('400: posted body properties are null/wrong datatype', () => {
+      return request(app)
+      .post("/api/articles/2/comments")
+      .send({username: "icellusedkars", body: null})
+      .expect(400)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Bad request!")
+      })
+    });
+  });
+});
+
+describe('404: invalid url', () => {
+  test("404: returns with an error message when invalid url requested",()=>{
+    return request(app)
+    .get("/app")
+    .expect(404)
+    .then(({body: {error}})=>{
+      expect(error).toEqual("Invalid URL!")
+    })
+  })
 });
