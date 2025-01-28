@@ -62,6 +62,24 @@ describe('GET /api/articles/:article_id', () => {
       })
     })
   })
+  describe('error handling', () => {
+    test('400: returns with a bad request error message when invalid article id inputted', () => {
+      return request(app)
+      .get("/api/articles/FIFTEEN")
+      .expect(400)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Bad request!")
+      })
+    });
+    test('404: returns with not found message when valid id inputted that has no corresponding article', () => {
+      return request(app)
+      .get("/api/articles/3141592")
+      .expect(404)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Not found!")
+      })
+    });
+  });
 });
 
 describe('GET /api/articles', () => {
@@ -88,7 +106,7 @@ describe('GET /api/articles', () => {
   });
 });
 
-describe.only('GET /api/articles/:article_id/comments', () => {
+describe('GET /api/articles/:article_id/comments', () => {
   test('200: should respond with an array of comment objects for relevant article_id with expected properties + datatypes in date ordered desc ', () => {
     return request(app)
     .get("/api/articles/1/comments")
@@ -108,10 +126,36 @@ describe.only('GET /api/articles/:article_id/comments', () => {
       })
     })
   });
+  test("200: returns 200 + empty array when valid article_id inputted where corresponding article exists but has no comments", ()=>{
+    return request(app)
+    .get("/api/articles/2/comments")
+    .expect(200)
+    .then(({body : {comments}})=>{
+      expect(comments.length).toBe(0)
+    })
+  })
+  describe('error handling', () => {
+    test('400: bad request when invalid article_id inputted', () => {
+      return request(app)
+      .get("/api/articles/FIFTEEN/comments")
+      .expect(400)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Bad request!")
+      })
+    });
+    test('404: not found when valid article_id inputted but no corresponding article exists', () => {
+      return request(app)
+      .get("/api/articles/3141592/comments")
+      .expect(404)
+      .then(({body: {error}})=>{
+        expect(error).toEqual("Not found!")
+      })
+    });
+  });
 });
 
 //error testing
-describe('error handling', () => {
+describe('general error handling', () => {
   describe('404: not a route', () => {
     test("404: returns with an error message when invalid url requested",()=>{
       return request(app)
@@ -122,23 +166,4 @@ describe('error handling', () => {
       })
     })
   });
-  describe('GET /api/articles/:article_id', () => {
-    test('400: returns with a bad request error message when invalid article id inputted', () => {
-      return request(app)
-      .get("/api/articles/FIFTEEN")
-      .expect(400)
-      .then(({body: {error}})=>{
-        expect(error).toEqual("Bad request!")
-      })
-    });
-    test('404: returns with not found message when valid id inputted that has no corresponding article', () => {
-      return request(app)
-      .get("/api/articles/3141592")
-      .expect(404)
-      .then(({body: {error}})=>{
-        expect(error).toEqual("Not found!")
-      })
-    });
-  });
-  
 });
