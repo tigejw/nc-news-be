@@ -1,4 +1,5 @@
 const db = require("../connection")
+const format = require("pg-format")
 
 exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
   if (!created_at) return { ...otherProperties };
@@ -23,24 +24,13 @@ exports.formatComments = (comments, idLookup) => {
   });
 };
 
-exports.checkArticleExists = (article_id) => {
-  return db.query("SELECT * FROM articles WHERE article_id = $1", [article_id])
-    .then(({rows})=>{
-      if(rows.length===0){
-        return Promise.reject({status: 404, msg: "Not found!"})
-      } else {
-        return "Article exists!"
-      }
-    })
-}
-
-exports.checkUserExists = (username) => {
-  return db.query("SELECT * FROM users WHERE username = $1", [username])
+exports.checkExists = (table, column, value) => {
+  return db.query(format("SELECT * FROM %I WHERE %I = $1", table, column), [value])
   .then(({rows})=>{
     if(rows.length===0){
-      return Promise.reject({status: 400, msg: "Bad request!"})
-      } else {
-        return "User exists!"
-      }
+      return Promise.reject({status: 404, msg: "Not found!"})
+    }else{ 
+      return "It's alive!"
+    }
   })
 }

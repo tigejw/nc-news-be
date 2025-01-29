@@ -3,7 +3,8 @@ const {
   createRef,
   formatComments,
   checkArticleExists,
-  checkUserExists
+  checkUserExists,
+  checkExists,
 } = require("../db/seeds/utils");
 
 describe("convertTimestampToDate", () => {
@@ -105,20 +106,23 @@ describe("formatComments", () => {
   });
 });
 
-describe('checkArticleExists', () => {
+describe('checkExists', () => {
   test('should return rejected promise with 404 status + msg when searching for an article that doesnt exist', () => {
-    return expect(checkArticleExists(3141592)).rejects.toMatchObject({status: 404, msg: "Not found!"})
+    return expect(checkExists("articles","article_id", 3141592)).rejects.toMatchObject({status: 404, msg: "Not found!"})
   });
   test('should resolve if article exists', () => {
-    return expect(checkArticleExists(2)).resolves.toMatch("Article exists!")
+    return expect(checkExists("articles","article_id", 2)).resolves.toMatch("It's alive!")
   });
-});
-
-describe('checkUserExists', () => {
   test('should return rejected promise with 404 status + msg when searching for an user that doesnt exist', () => {
-    return expect(checkUserExists("tjw")).rejects.toMatchObject({status: 400, msg: "Bad request!"})
+    return expect(checkExists("users","username","tjw")).rejects.toMatchObject({status: 404, msg: "Not found!"})
   });
   test('should resolve if user exists', () => {
-    return expect(checkUserExists("icellusedkars")).resolves.toMatch("User exists!")
+    return expect(checkExists("users","username", "icellusedkars")).resolves.toMatch("It's alive!")
+  });
+  test('should return rejected promise when searching for comment that doesnt exist', () => {
+    return expect(checkExists("comments","comment_id",31415926)).rejects.toMatchObject({status: 404, msg: "Not found!"})
+  })
+  test('should resolve if comment exists', () => {
+    return expect(checkExists("comments","comment_id", 3)).resolves.toMatch("It's alive!")
   });
 });
