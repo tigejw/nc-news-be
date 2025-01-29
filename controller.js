@@ -1,4 +1,4 @@
-const { readEndpointsData, selectAllTopics, selectArticleByArticleId, selectAllArticles, selectCommentsByArticleId, insertCommentByArticleId, updateArticleByArticleId } = require("./model.js")
+const { readEndpointsData, selectAllTopics, selectArticleByArticleId, selectAllArticles, selectCommentsByArticleId, insertCommentByArticleId, updateArticleByArticleId, deleteFromCommentsByCommentId } = require("./model.js")
 const { checkUserExists } = require("./db/seeds/utils.js")
 
 exports.getEndpoints = (req, res, next) => {
@@ -53,10 +53,7 @@ exports.getCommentsByArticleId = (req, res, next) => {
 exports.postCommentByArticleId = (req, res, next) => {
     const { article_id } = req.params
     const { body } = req
-    checkUserExists(body.username)
-        .then(() => {
-            return insertCommentByArticleId(article_id, body)
-        })
+    return insertCommentByArticleId(article_id, body)
         .then((comment) => {
             res.status(201).send({ comment: comment })
         })
@@ -69,15 +66,25 @@ exports.postCommentByArticleId = (req, res, next) => {
 exports.patchArticleByArticleId = (req, res, next) => {
     const { article_id } = req.params
     const { body } = req
-    if (typeof body.inc_votes !== "number") {
-        next({ status: 400, msg: "Bad request!" })
-    } else {
-        updateArticleByArticleId(article_id, body)
-            .then((article) => {
-                res.status(200).send({ article: article })
-            })
-            .catch((err) => {
-                next(err)
-            })
-    }
+    updateArticleByArticleId(article_id, body)
+        .then((article) => {
+            res.status(200).send({ article: article })
+        })
+        .catch((err) => {
+            next(err)
+        })
+}
+
+
+exports.deleteCommentByCommentId = (req, res, next) => {
+    const { comment_id } = req.params
+    deleteFromCommentsByCommentId(comment_id)
+        .then(() => {
+            res.status(204).send()
+        })
+        .catch((err) => {
+            next(err)
+        })
+
+
 }
