@@ -29,8 +29,8 @@ exports.getArticleByArticleId = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-    const { sort_by, order } = req.query
-    selectAllArticles(sort_by, order)
+    const { sort_by, order, topic } = req.query
+    selectAllArticles(sort_by, order, topic)
         .then((articlesData) => {
             res.status(200).send({ articles: articlesData })
         })
@@ -74,7 +74,6 @@ exports.patchArticleByArticleId = (req, res, next) => {
             next(err)
         })
 }
-
 
 exports.deleteCommentByCommentId = (req, res, next) => {
     const { comment_id } = req.params
