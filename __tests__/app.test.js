@@ -82,7 +82,7 @@ describe('GET /api/articles/:article_id', () => {
   });
 });
 
-describe('GET /api/articles', () => {
+describe.only('GET /api/articles', () => {
   test('200: responds with all articles, should an an array of article objects each with relevant properties + datatypes sorted by date in descending order', () => {
     return request(app)
       .get("/api/articles")
@@ -104,6 +104,43 @@ describe('GET /api/articles', () => {
         })
       })
   });
+  describe('queries', () => {
+    test('200: query endpoint sort_by should allow articles to be sorted by any valid column', () => {
+      return request(app)
+        .get("/api/articles?sort_by=title")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('title', {descending : true})
+        })
+    });
+    test('200: order query should allow for returns to be sorted in asc or desc', () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes&order=asc")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('votes', { ascending: true })
+        })
+    })
+    describe('error handling', () => {
+      test("400: should reject non intended query values", ()=> {
+        return request(app)
+        .get("/api/articles?sort_by=;MWAHAHAHAH DELeTE ALL&order=;EVIL LAUGH")
+        .expect(400)
+        .then(({body : {error}})=>{
+          expect(error).toBe("Invalid query!")
+        })
+      })
+      test("400: user should not be able to sort by article_img_url", ()=> {
+        return request(app)
+        .get("/api/articles?sort_by=article_img_url")
+        .expect(400)
+        .then(({body: {error}})=>{
+          expect(error).toBe("Invalid query!")
+        })
+      })
+    });
+  });
+
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
@@ -302,23 +339,25 @@ describe('DELETE /api/comments/comment_id', () => {
   });
 });
 
-describe.only('Get /api/users', () => {
+describe('Get /api/users', () => {
   test('200: should respond with an array of user objects with expected properties and datatypes', () => {
     return request(app)
-    .get("/api/users")
-    .expect(200)
-    .then(({body: {users}})=>{
-      expect(users.length).toBe(4)
-      users.forEach((user)=>{
-        expect(user).toEqual(expect.objectContaining({
-          username: expect.any(String),
-          name: expect.any(String),
-          avatar_url : expect.any(String)
-        }))
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        expect(users.length).toBe(4)
+        users.forEach((user) => {
+          expect(user).toEqual(expect.objectContaining({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String)
+          }))
+        })
       })
-    })
   });
 });
+
+
 
 describe('404: invalid url', () => {
   test("404: returns with an error message when invalid url requested", () => {

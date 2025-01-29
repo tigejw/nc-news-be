@@ -27,10 +27,20 @@ exports.selectArticleByArticleId = (article_id) => {
     })
 }
 
-exports.selectAllArticles = () => {
-    return db.query(`SELECT title, articles.author, articles.article_id, topic, articles.created_at, articles.votes, article_img_url, 
+exports.selectAllArticles = (sort_by = 'created_at', order = 'desc') => {
+    let dbQuery = `SELECT title, articles.author, articles.article_id, topic, articles.created_at, articles.votes, article_img_url, 
         COUNT(comments.comment_id)::int AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id 
-        GROUP BY articles.article_id ORDER BY articles.created_at DESC;`)
+        GROUP BY articles.article_id `
+
+    const greenList = ["title", "author", "article_id", "created_at", "votes", "comment_count", "desc", "asc"]
+
+    if(greenList.includes(sort_by)&&greenList.includes(order)) {
+        dbQuery += `ORDER BY ${sort_by} ${order}`
+    } else {
+        return Promise.reject({status: 400 , msg: "Invalid query!"})
+    }
+
+    return db.query(dbQuery)
         .then(({ rows }) => {
             return rows
         })
