@@ -1,5 +1,4 @@
-const { readEndpointsData, selectAllTopics, selectArticleByArticleId, selectAllArticles, selectCommentsByArticleId, insertCommentByArticleId, updateArticleByArticleId, deleteFromCommentsByCommentId } = require("./model.js")
-const { checkUserExists } = require("./db/seeds/utils.js")
+const { readEndpointsData, selectAllTopics, selectArticleByArticleId, selectAllArticles, selectCommentsByArticleId, insertCommentByArticleId, updateArticleByArticleId, deleteFromCommentsByCommentId, selectAllUsers } = require("./model.js")
 
 exports.getEndpoints = (req, res, next) => {
     readEndpointsData().then((endpointsData) => {
@@ -87,4 +86,14 @@ exports.deleteCommentByCommentId = (req, res, next) => {
         })
 
 
+}
+
+exports.getUsers = (req, res, next) => {
+    selectAllUsers()
+    .then((users)=>{
+        res.status(200).send({users : users})
+    })
+    .catch((err)=>{
+        next(err)
+    })
 }

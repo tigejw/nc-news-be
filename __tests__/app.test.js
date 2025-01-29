@@ -276,7 +276,7 @@ describe('PATCH /api/articles/:article_id', () => {
   });
 });
 
-describe.only('DELETE /api/comments/comment_id', () => {
+describe('DELETE /api/comments/comment_id', () => {
   test('204: should delete comment referenced by comment_id and return nothing', () => {
     return request(app)
       .delete("/api/comments/1")
@@ -299,6 +299,24 @@ describe.only('DELETE /api/comments/comment_id', () => {
           expect(error).toEqual("Bad request!")
         })
     });
+  });
+});
+
+describe.only('Get /api/users', () => {
+  test('200: should respond with an array of user objects with expected properties and datatypes', () => {
+    return request(app)
+    .get("/api/users")
+    .expect(200)
+    .then(({body: {users}})=>{
+      expect(users.length).toBe(4)
+      users.forEach((user)=>{
+        expect(user).toEqual(expect.objectContaining({
+          username: expect.any(String),
+          name: expect.any(String),
+          avatar_url : expect.any(String)
+        }))
+      })
+    })
   });
 });
 

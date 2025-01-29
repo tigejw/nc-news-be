@@ -96,14 +96,14 @@
       }
     }
   },
-  "PATCH /api/articles/:article_id" : {
+  "PATCH /api/articles/:article_id": {
     "description": "updates an articles votes property incremenetally and serves updated article object",
     "request body format": {
       "inc_votes": 3
     },
     "queries": [],
     "example response": {
-      "article" :{
+      "article": {
         "title": "Seafood substitutions are increasing",
         "topic": "cooking",
         "author": "weegembump",
@@ -112,6 +112,24 @@
         "votes": 3,
         "comment_count": 6
       }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes a comment according to comment_id returning 204 status code + no body",
+    "queries": [],
+    "exampleResponse": null
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "icellusedkars",
+          "name": "sam",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
+        }
+      ]
     }
   }
 }
