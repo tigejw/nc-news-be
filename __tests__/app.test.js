@@ -121,7 +121,38 @@ describe.only('GET /api/articles', () => {
           expect(articles).toBeSortedBy('votes', { ascending: true })
         })
     })
-    describe('error handling', () => {
+    test('200: topic query should filter the results to only show articles related to that topic', () => {
+      return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({body : {articles}})=>{
+        expect(articles.length).toBe(12)
+        articles.forEach((article)=>{
+          expect(article.topic).toBe("mitch")
+        })
+      })
+    });
+    test('200:should return empty array if topic exists but has no articles', ()=>{
+      return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({body: {articles}})=>{
+        expect(articles).toEqual([])
+      })
+    })
+    test('200: topic should work in conjuncture with other queries',()=>{
+      return request(app)
+      .get("/api/articles?sort_by=votes&order=asc&topic=mitch")
+      .expect(200)
+      .then(({body: {articles}})=>{
+        expect(articles.length).toBe(12)
+        expect(articles).toBeSortedBy("votes", {ascending:true})
+        articles.forEach((article)=>{
+          expect(article.topic).toBe("mitch")
+        })
+      })
+    })
+    describe('query error handling', () => {
       test("400: should reject non intended query values", ()=> {
         return request(app)
         .get("/api/articles?sort_by=;MWAHAHAHAH DELeTE ALL&order=;EVIL LAUGH")
@@ -138,6 +169,15 @@ describe.only('GET /api/articles', () => {
           expect(error).toBe("Invalid query!")
         })
       })
+      test("404: should reject valid but non existent query values", ()=>{
+        return request(app)
+        .get("/api/articles?topic=invalid")
+        .expect(404)
+        .then(({body: {error}})=>{
+          expect(error).toBe("Not found!")
+        })
+      })
+
     });
   });
 
