@@ -78,3 +78,10 @@ exports.deleteFromCommentsByCommentId = (comment_id) => {
         return db.query(`DELETE FROM comments WHERE comment_id = $1`, [comment_id])
     })
 }
+
+exports.selectAllUsers = () => {
+    return db.query("SELECT username, name, avatar_url FROM users")
+    .then(({rows})=>{
+        return rows
+    })
+}
