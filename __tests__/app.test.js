@@ -43,7 +43,7 @@ describe('GET /api/topics', () => {
   })
 });
 
-describe.only('GET /api/articles/:article_id', () => {
+describe('GET /api/articles/:article_id', () => {
   test("200: responds with corresponding article object according to requested id, should return one object with relevant properties + data", () => {
     return request(app)
       .get("/api/articles/1")
@@ -83,7 +83,7 @@ describe.only('GET /api/articles/:article_id', () => {
   });
 });
 
-describe.only('GET /api/articles', () => {
+describe('GET /api/articles', () => {
   test('200: responds with all articles, should an an array of article objects each with relevant properties + datatypes sorted by date in descending order', () => {
     return request(app)
       .get("/api/articles")
