@@ -34,7 +34,7 @@ app.use((err, req, res, next) => {
 
 app.use((err, req, res, next) => {
     console.log(err, "<<< handle this")
-    res.status(500).send({ error: "Server Error!" });
+    res.status(500).send({ error: "Server Error!", msg: err });
 });
 
 module.exports = app
