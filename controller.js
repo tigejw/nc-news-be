@@ -1,4 +1,4 @@
-const { readEndpointsData, selectAllTopics, selectArticleByArticleId, selectAllArticles, selectCommentsByArticleId, insertCommentByArticleId, updateArticleByArticleId, deleteFromCommentsByCommentId, selectAllUsers, selectUserByUsername, updateCommentByCommentId, insertArticle, insertTopic } = require("./model.js")
+const { readEndpointsData, selectAllTopics, selectArticleByArticleId, selectAllArticles, selectCommentsByArticleId, insertCommentByArticleId, updateArticleByArticleId, deleteFromCommentsByCommentId, selectAllUsers, selectUserByUsername, updateCommentByCommentId, insertArticle, insertTopic, deleteFromArticlesAndCommentsByArticleId } = require("./model.js")
 
 exports.getEndpoints = (req, res, next) => {
     readEndpointsData().then((endpointsData) => {
@@ -134,6 +134,17 @@ exports.postTopic = (req, res, next) => {
     insertTopic(slug, description)
     .then((topic)=>{
         res.status(201).send({topic: topic})
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
+
+exports.deleteArticleByArticleId = (req, res, next) => {
+    const {article_id} = req.params
+    deleteFromArticlesAndCommentsByArticleId(article_id)
+    .then(()=>{
+        res.status(204).send()
     })
     .catch((err)=>{
         next(err)
