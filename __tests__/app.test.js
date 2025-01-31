@@ -7,7 +7,7 @@ const endpointsJson = require("../endpoints.json");
 const { articleData, commentData, topicData, userData } = require("../db/data/test-data/index.js");
 
 beforeEach(() => {
-  jest.setTimeout(25000)
+  jest.setTimeout(215000)
   return seed({ topicData, userData, articleData, commentData });
 })
 

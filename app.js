@@ -1,18 +1,13 @@
 const express = require("express")
 const app = express()
 app.use(express.json())
+const apiRouter = require("./apiRouter")
 
-const { getEndpoints, getTopics, getArticleByArticleId, getArticles, getCommentsByArticleId, postCommentByArticleId, patchArticleByArticleId, deleteCommentByCommentId, getUsers } = require("./controller")
+//endpoint routing
 
-app.get("/api", getEndpoints)
-app.get("/api/topics", getTopics)
-app.get("/api/articles/:article_id", getArticleByArticleId)
-app.get("/api/articles", getArticles)
-app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
-app.post("/api/articles/:article_id/comments", postCommentByArticleId)
-app.patch("/api/articles/:article_id", patchArticleByArticleId)
-app.delete("/api/comments/:comment_id", deleteCommentByCommentId)
-app.get("/api/users", getUsers)
+app.use("/api", apiRouter)
+
+//invalid url handling
 
 app.all("/*", (req, res) => {
     res.status(404).send({ error: "Invalid URL!" })
