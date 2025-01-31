@@ -111,7 +111,7 @@ describe('GET /api/articles', () => {
         .get("/api/articles?sort_by=title")
         .expect(200)
         .then(({ body: { articles } }) => {
-          expect(articles).toBeSortedBy('title', {descending : true})
+          expect(articles).toBeSortedBy('title', { descending: true })
         })
     });
     test('200: order query should allow for returns to be sorted in asc or desc', () => {
@@ -124,59 +124,59 @@ describe('GET /api/articles', () => {
     })
     test('200: topic query should filter the results to only show articles related to that topic', () => {
       return request(app)
-      .get("/api/articles?topic=mitch")
-      .expect(200)
-      .then(({body : {articles}})=>{
-        expect(articles.length).toBe(12)
-        articles.forEach((article)=>{
-          expect(article.topic).toBe("mitch")
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(12)
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch")
+          })
         })
-      })
     });
-    test('200:should return empty array if topic exists but has no articles', ()=>{
+    test('200:should return empty array if topic exists but has no articles', () => {
       return request(app)
-      .get("/api/articles?topic=paper")
-      .expect(200)
-      .then(({body: {articles}})=>{
-        expect(articles).toEqual([])
-      })
-    })
-    test('200: topic should work in conjuncture with other queries',()=>{
-      return request(app)
-      .get("/api/articles?sort_by=votes&order=asc&topic=mitch")
-      .expect(200)
-      .then(({body: {articles}})=>{
-        expect(articles.length).toBe(12)
-        expect(articles).toBeSortedBy("votes", {ascending:true})
-        articles.forEach((article)=>{
-          expect(article.topic).toBe("mitch")
+        .get("/api/articles?topic=paper")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toEqual([])
         })
-      })
+    })
+    test('200: topic should work in conjuncture with other queries', () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes&order=asc&topic=mitch")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(12)
+          expect(articles).toBeSortedBy("votes", { ascending: true })
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch")
+          })
+        })
     })
     describe('query error handling', () => {
-      test("400: should reject non intended query values", ()=> {
+      test("400: should reject non intended query values", () => {
         return request(app)
-        .get("/api/articles?sort_by=;MWAHAHAHAH DELeTE ALL&order=;EVIL LAUGH")
-        .expect(400)
-        .then(({body : {error}})=>{
-          expect(error).toBe("Invalid query!")
-        })
+          .get("/api/articles?sort_by=;MWAHAHAHAH DELeTE ALL&order=;EVIL LAUGH")
+          .expect(400)
+          .then(({ body: { error } }) => {
+            expect(error).toBe("Invalid query!")
+          })
       })
-      test("400: user should not be able to sort by article_img_url", ()=> {
+      test("400: user should not be able to sort by article_img_url", () => {
         return request(app)
-        .get("/api/articles?sort_by=article_img_url")
-        .expect(400)
-        .then(({body: {error}})=>{
-          expect(error).toBe("Invalid query!")
-        })
+          .get("/api/articles?sort_by=article_img_url")
+          .expect(400)
+          .then(({ body: { error } }) => {
+            expect(error).toBe("Invalid query!")
+          })
       })
-      test("404: should reject valid but non existent query values", ()=>{
+      test("404: should reject valid but non existent query values", () => {
         return request(app)
-        .get("/api/articles?topic=invalid")
-        .expect(404)
-        .then(({body: {error}})=>{
-          expect(error).toBe("Not found!")
-        })
+          .get("/api/articles?topic=invalid")
+          .expect(404)
+          .then(({ body: { error } }) => {
+            expect(error).toBe("Not found!")
+          })
       })
 
     });
@@ -397,6 +397,31 @@ describe('Get /api/users', () => {
       })
   });
 });
+
+describe("GET /api/users/:username", () => {
+  test('200: should respond wtih a user object corresponding to requested username with expected properties and datatypes', () => {
+    return request(app)
+      .get("/api/users/icellusedkars")
+      .expect(200)
+      .then(({ body: { user } }) => {
+        expect(user).toEqual(expect.objectContaining({
+          username: expect.any(String),
+          avatar_url: expect.any(String),
+          name: expect.any(String)
+        }))
+      })
+  });
+  describe('error handling', () => {
+    test('404: valid input but user doesnt exist', () => {
+      return request(app)
+        .get("/api/users/tjw")
+        .expect(404)
+        .then(({ body: { error } }) => {
+          expect(error).toBe("Not found!")
+        })
+    })
+  });
+})
 
 
 
