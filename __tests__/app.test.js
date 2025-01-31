@@ -426,21 +426,21 @@ describe("GET /api/users/:username", () => {
 describe('PATCH /api/comments/:comment_id', () => {
   test('200: should update the votes property of corresponding comment + return updated comment', () => {
     return request(app)
-    .patch("/api/comments/1")
-    .send({ inc_votes: 1})
-    .expect(200)
-    .then(({body: {comment}})=>{
-      expect(comment.votes).toBe(17)
-    })
+      .patch("/api/comments/1")
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then(({ body: { comment } }) => {
+        expect(comment.votes).toBe(17)
+      })
   });
   test('200: should work with comments that have 0 votes / work where inputted votes are negative', () => {
     return request(app)
-    .patch("/api/comments/5")
-    .send({inc_votes: -3})
-    .expect(200)
-    .then(({body: {comment}})=>{
-      expect(comment.votes).toBe(-3)
-    })
+      .patch("/api/comments/5")
+      .send({ inc_votes: -3 })
+      .expect(200)
+      .then(({ body: { comment } }) => {
+        expect(comment.votes).toBe(-3)
+      })
   });
   describe('error handling', () => {
     test('400: patch body does not contain the correct fields', () => {
@@ -480,6 +480,106 @@ describe('PATCH /api/comments/:comment_id', () => {
     });
   });
 });
+
+describe('POST: /api/articles', () => {
+  test('201: the request should create a new article and respond with the newly created article with expected properties and datatypes', () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "icellusedkars",
+        title: "here we are!",
+        body: "so here wr are! in my new article! enjoy c:",
+        topic: "mitch",
+        article_img_url: "https://de.schleich-s.com/cdn/shop/files/discover_schleichstories_dinosaurs_story_b60c8bb5-27b7-45f3-8bc7-93d087e64b27.png?v=1711021722&width=493"
+      })
+      .expect(201)
+      .then(({ body: { article } }) => {
+        expect(article).toEqual(expect.objectContaining({
+          author: expect.any(String),
+          title: expect.any(String),
+          body: expect.any(String),
+          topic: expect.any(String),
+          article_img_url: expect.any(String),
+          article_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          comment_count: expect.any(Number),
+        }))
+      })
+  });
+  test('201: should return default article_img_url if non provided', () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "icellusedkars",
+        title: "here we are! yippee!!",
+        body: "so here wr are! in my new article! enjoy c: smileyface",
+        topic: "mitch",
+      })
+      .expect(201)
+      .then(({ body: { article } }) => {
+        expect(article.article_img_url).toBe("https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=70")
+      })
+  });
+  describe('error handling', () => {
+    test('404: inputted username valid but doesnt already exist', () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "tigejw",
+          title: "here we are! yippee!!",
+          body: "so here wr are! in my new article! enjoy c: smileyface",
+          topic: "mitch",
+        })
+        .expect(404)
+        .then(({ body: { error } }) => {
+          expect(error).toEqual("Not found!")
+        })
+    });
+    test('400: inputted topic valid but doesnt already exist', () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "icellusedkars",
+          title: "here we are! yippee!!",
+          body: "so here wr are! in my new article! enjoy c: smileyface",
+          topic: "dinosaurs RAWRRR",
+        })
+        .expect(404)
+        .then(({ body: { error } }) => {
+          expect(error).toEqual("Not found!")
+        })
+    })
+    test('400: post body does not contain the correct properies ', () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "icellusedkars",
+          body: "so here wr are! in my new article! enjoy c: smileyface",
+          topic: "mitch",
+        })
+        .expect(400)
+        .then(({ body: { error } }) => {
+          expect(error).toEqual("Bad request!")
+        })
+    });
+    test('400: posted body properties are null/wrong datatype', () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "icellusedkars",
+          title: null,
+          body: "so here wr are! in my new article! enjoy c: smileyface",
+          topic: "mitch",
+        })
+        .expect(400)
+        .then(({ body: { error } }) => {
+          expect(error).toEqual("Bad request!")
+        })
+    });
+  });
+});
+
 
 
 
