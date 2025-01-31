@@ -158,3 +158,13 @@ exports.insertTopic = (slug, description) => {
         return rows[0]
     })
 }
+
+exports.deleteFromArticlesAndCommentsByArticleId = (article_id) => {
+    return checkExists("articles", "article_id", article_id)
+    .then(()=>{
+        return db.query("DELETE FROM comments WHERE article_id = $1", [article_id])
+    })
+    .then(()=>{
+        return db.query("DELETE FROM articles WHERE article_id = $1", [article_id])
+    })
+}

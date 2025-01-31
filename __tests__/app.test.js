@@ -621,6 +621,36 @@ describe('POST: /api/topics', () => {
   });
 });
 
+describe('DELETE /api/articles/article_id', () => {
+  test('204: should delete article and respective comments article_id and return nothing', () => {
+    return request(app)
+      .delete("/api/articles/1")
+      .expect(204)
+  });
+  test('204: should delete article and return nothing when no related comments exist', () => {
+    return request(app)
+      .delete("/api/articles/2")
+      .expect(204)
+  });
+  describe('error handling', () => {
+    test('404: returns 404 + error message when attempting to delete a valid article_id that does not exist', () => {
+      return request(app)
+        .delete("/api/articles/314141414")
+        .expect(404)
+        .then(({ body: { error } }) => {
+          expect(error).toEqual("Not found!")
+        })
+    });
+    test('400: returns 400 + error message when invalid id inputted', () => {
+      return request(app)
+        .delete("/api/articles/FIFTEEN")
+        .expect(400)
+        .then(({ body: { error } }) => {
+          expect(error).toEqual("Bad request!")
+        })
+    });
+  });
+});
 
 describe('404: invalid url', () => {
   test("404: returns with an error message when invalid url requested", () => {
