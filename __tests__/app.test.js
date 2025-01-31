@@ -580,7 +580,46 @@ describe('POST: /api/articles', () => {
   });
 });
 
-
+describe('POST: /api/topics', () => {
+  test('201: should create new topics returning created topic object with expected properties and values', () => {
+    return request(app)
+      .post("/api/topics")
+      .send({ slug: "dinosaurs", description: "rARAWRRRRWRR" })
+      .expect(201)
+      .then(({ body: { topic } }) => {
+        expect(topic).toEqual({ slug: "dinosaurs", description: "rARAWRRRRWRR" })
+      })
+  });
+  describe('error handling', () => {
+    test('400: topic already exists', () => {
+      return request(app)
+        .post("/api/topics")
+        .send({ slug: "mitch", description: "rARAWRRRRWRR" })
+        .expect(400)
+        .then(({ body: { error } }) => {
+          expect(error).toEqual("Bad request!")
+        })
+    });
+    test('400: posted body properties incorrect', () => {
+      return request(app)
+      .post("/api/topics")
+      .send({ slug: "mitch"})
+      .expect(400)
+      .then(({ body: { error } }) => {
+        expect(error).toEqual("Bad request!")
+      })
+    });
+    test('400: posted body values are null/wrongdatatype', () => {
+      return request(app)
+      .post("/api/topics")
+      .send({ slug: null, description: "rARAWRRRRWRR" })
+      .expect(400)
+      .then(({ body: { error } }) => {
+        expect(error).toEqual("Bad request!")
+      })
+    })
+  });
+});
 
 
 describe('404: invalid url', () => {
