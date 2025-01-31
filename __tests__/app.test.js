@@ -423,6 +423,64 @@ describe("GET /api/users/:username", () => {
   });
 })
 
+describe('PATCH /api/comments/:comment_id', () => {
+  test('200: should update the votes property of corresponding comment + return updated comment', () => {
+    return request(app)
+    .patch("/api/comments/1")
+    .send({ inc_votes: 1})
+    .expect(200)
+    .then(({body: {comment}})=>{
+      expect(comment.votes).toBe(17)
+    })
+  });
+  test('200: should work with comments that have 0 votes / work where inputted votes are negative', () => {
+    return request(app)
+    .patch("/api/comments/5")
+    .send({inc_votes: -3})
+    .expect(200)
+    .then(({body: {comment}})=>{
+      expect(comment.votes).toBe(-3)
+    })
+  });
+  describe('error handling', () => {
+    test('400: patch body does not contain the correct fields', () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({})
+        .expect(400)
+        .then(({ body: { error } }) => {
+          expect(error).toBe("Bad request!")
+        })
+    });
+    test('400: patch with valid fields but wrong datatype', () => {
+      return request(app)
+        .patch("/api/comments/2")
+        .send({ inc_votes: "word" })
+        .expect(400)
+        .then(({ body: { error } }) => {
+          expect(error).toBe("Bad request!")
+        })
+    });
+    test('400: comment is invalid', () => {
+      return request(app)
+        .patch("/api/comments/FIFTEEN")
+        .send({ inc_votes: -1 })
+        .expect(400)
+        .then(({ body: { error } }) => {
+          expect(error).toEqual("Bad request!")
+        })
+    });
+    test('404: comment is valid but comment doesnt exist', () => {
+      return request(app)
+        .patch("/api/comments/314")
+        .send({ inc_votes: -1 })
+        .then(({ body: { error } }) => {
+          expect(error).toEqual("Not found!")
+        })
+    });
+  });
+});
+
 
 
 describe('404: invalid url', () => {

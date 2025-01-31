@@ -1,4 +1,4 @@
-const { readEndpointsData, selectAllTopics, selectArticleByArticleId, selectAllArticles, selectCommentsByArticleId, insertCommentByArticleId, updateArticleByArticleId, deleteFromCommentsByCommentId, selectAllUsers, selectUserByUsername } = require("./model.js")
+const { readEndpointsData, selectAllTopics, selectArticleByArticleId, selectAllArticles, selectCommentsByArticleId, insertCommentByArticleId, updateArticleByArticleId, deleteFromCommentsByCommentId, selectAllUsers, selectUserByUsername, updateCommentByCommentId } = require("./model.js")
 
 exports.getEndpoints = (req, res, next) => {
     readEndpointsData().then((endpointsData) => {
@@ -107,4 +107,17 @@ exports.getUserByUsername = (req, res, next) => {
     .catch((err)=>{
         next(err)
     })
+}
+
+exports.patchCommentByCommentId = (req, res, next) => {
+    const {comment_id} = req.params
+    const { inc_votes } = req.body
+    updateCommentByCommentId(inc_votes, comment_id)
+    .then((comment)=>{
+        res.status(200).send({comment: comment})
+    })
+    .catch((err)=>{
+        next(err)
+    })
+
 }
