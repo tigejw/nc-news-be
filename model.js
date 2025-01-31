@@ -134,7 +134,7 @@ exports.updateCommentByCommentId = (inc_votes, comment_id) => {
 
 exports.insertArticle = (author, title, body, topic, article_img_url = "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=70") => {
     return checkExists("users", "username", author)
-        .then(()=>{
+        .then(() => {
             return checkExists("topics", "slug", topic)
         })
         .then(() => {
@@ -144,4 +144,17 @@ exports.insertArticle = (author, title, body, topic, article_img_url = "https://
             rows[0].comment_count = 0
             return rows[0]
         })
+}
+
+exports.insertTopic = (slug, description) => {
+    return db.query("SELECT * FROM topics")
+    .then(({rows})=>{
+        return rows.some((topic)=>{return topic.slug===slug}) ? Promise.reject({status: 400, msg: "Bad request!"}) : "allgood"
+    })
+    .then(()=>{
+        return db.query("INSERT INTO topics (slug, description) VALUES ($1, $2) RETURNING *;", [slug, description])
+    })
+    .then(({rows})=>{
+        return rows[0]
+    })
 }
