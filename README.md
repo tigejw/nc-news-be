@@ -20,4 +20,4 @@ To check it out yourself simply clone down the repo and run:
 
 Tested/Made using node.js v20.16.0 and PostgreSQL 16.6
 
-
+This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
