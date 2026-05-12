@@ -1,11 +1,10 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
-const apiRouter = require("./apiRouter");
+const apiRouter = require("./routers/apiRouter");
 const cors = require("cors");
 app.use(cors());
 //endpoint routing
-
 app.use("/api", apiRouter);
 
 //invalid url handling
